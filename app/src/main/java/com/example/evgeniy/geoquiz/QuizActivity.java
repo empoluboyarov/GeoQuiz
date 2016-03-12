@@ -21,6 +21,7 @@ public class QuizActivity extends AppCompatActivity {
     private int currentIndex = 0;
     public static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private boolean isCheater;
 
     private TrueFalse[] questionBank = new TrueFalse[]{
             new TrueFalse(R.string.question_oceans, true),
@@ -39,10 +40,12 @@ public class QuizActivity extends AppCompatActivity {
         boolean answerIsTrue = questionBank[currentIndex].isTrueQuestion();
         int messageResId = 0;
 
-        if(userPressedTrue == answerIsTrue)
-            messageResId = R.string.correct_toast;
-        else messageResId = R.string.incorrect_toast;
-
+        if(isCheater == true)messageResId = R.string.judgment_toast;
+            else {
+            if (userPressedTrue == answerIsTrue)
+                messageResId = R.string.correct_toast;
+            else messageResId = R.string.incorrect_toast;
+        }
         Toast.makeText(QuizActivity.this, messageResId, Toast.LENGTH_SHORT).show();
     };
 
@@ -76,7 +79,7 @@ public class QuizActivity extends AppCompatActivity {
                 Intent intent = new Intent(QuizActivity.this,CheatActivity.class);
                 boolean answerIsTrue = questionBank[currentIndex].isTrueQuestion();
                 intent.putExtra(CheatActivity.EXTRA_ANSWER_IS_TRUE,answerIsTrue);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -85,6 +88,7 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 currentIndex = (currentIndex + 1) % questionBank.length;
+                isCheater = false;
                 updateQuestion();
             }
         });
@@ -142,4 +146,10 @@ public class QuizActivity extends AppCompatActivity {
         super.onDestroy();
         Log.d(TAG, "onDestroy() called");
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (data==null) return;
+        isCheater = data.getBooleanExtra(CheatActivity.EXTRA_ANSWER_SHOWN,false);
+    };
+
 }
