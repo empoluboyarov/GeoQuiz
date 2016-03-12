@@ -1,5 +1,6 @@
 package com.example.evgeniy.geoquiz;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,7 +21,8 @@ public class QuizActivity extends AppCompatActivity {
     private TextView questionTextView;
     private int currentIndex = 0;
     public static final String TAG = "QuizActivity";
-    private static final String KEY_INDEX = "index";
+    private static final String KEY_INDEX = "KEY";
+    private static final String CHEAT_INDEX = "CHEAT";
     private boolean isCheater;
 
     private TrueFalse[] questionBank = new TrueFalse[]{
@@ -54,6 +56,11 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
+
+        if(savedInstanceState!= null){
+            currentIndex = savedInstanceState.getInt(KEY_INDEX,0);
+            isCheater = savedInstanceState.getBoolean(CHEAT_INDEX,false);
+        }
 
         questionTextView = (TextView)findViewById(R.id.question_textview);
         questionTextView.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +126,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX, currentIndex);
+        savedInstanceState.putBoolean(CHEAT_INDEX,isCheater);
     }
 
     @Override
