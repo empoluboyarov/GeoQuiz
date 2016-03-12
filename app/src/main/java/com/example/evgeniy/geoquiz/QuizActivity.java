@@ -14,6 +14,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private Button trueButton;
     private Button falseButton;
+    private Button cheatButton;
     private ImageButton nextButton;
     private ImageButton prevButton;
     private TextView questionTextView;
@@ -48,7 +49,7 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG,"onCreate(Bundle) called");
+        Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
 
         questionTextView = (TextView)findViewById(R.id.question_textview);
@@ -65,6 +66,17 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 checkAnswer(true);
+            }
+        });
+
+        cheatButton = (Button)findViewById(R.id.cheat_button);
+        cheatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(QuizActivity.this,CheatActivity.class);
+                boolean answerIsTrue = questionBank[currentIndex].isTrueQuestion();
+                intent.putExtra(CheatActivity.EXTRA_ANSWER_IS_TRUE,answerIsTrue);
+                startActivity(intent);
             }
         });
 
